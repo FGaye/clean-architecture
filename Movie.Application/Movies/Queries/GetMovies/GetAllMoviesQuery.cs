@@ -5,7 +5,7 @@ using Movie.Domain.Entities;
 
 namespace Movie.Application.Movies.Queries.GetMovies
 {
-    public class GetMoviesQuery
+    public class GetAllMoviesQuery
     {
         public class Query : IRequest<List<MovieItem>>
         {

@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Movie.Application;
-using Movie.Application.Movies.Queries.GetMovies;
+using Movie.Application.Common.Interface;
 using Movie.Infrastructure.Persistence;
 
 
@@ -19,12 +19,15 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddDbContext<MovieContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("MovieApiDBConnection")));
 
+    // add scoped
+    builder.Services.AddScoped<IApplicationDbContext, MovieContext>();
+
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("CorsPolicy", policy =>
         {
             policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:5173");
-        }); 
+        });
     });
     var app = builder.Build();
     {
