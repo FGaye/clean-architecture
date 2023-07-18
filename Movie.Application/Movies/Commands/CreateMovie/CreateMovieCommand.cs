@@ -31,7 +31,7 @@ namespace Movie.Application.Movies.Commands.CreateMovie
                 };
 
                 _context.Movies.Add(movie);
-
+            
                 var result = await _context.SaveChangesAsync(cancellationToken);
 
                 if (result == 0)

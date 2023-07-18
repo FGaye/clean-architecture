@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Movie.Api.Controllers;
+using Movie.Application.Common.Interface;
 using Movie.Application.Movies.Commands.CreateMovie;
+using Movie.Application.Movies.Commands.DeleteMovie;
 using Movie.Application.Movies.Queries.GetMovieById;
 using Movie.Application.Movies.Queries.GetMovies;
 using Movie.Domain.Entities;
@@ -11,8 +13,10 @@ namespace Movie.Api;
 public class MovieApiController : BaseApiController
 {
     private readonly MovieContext _movieContext;
-    public MovieApiController(MovieContext movieContext)
+    private readonly IApplicationDbContext _context;
+    public MovieApiController(MovieContext movieContext, IApplicationDbContext context)
     {
+        _context = context;
         _movieContext = movieContext;
     }
     // create movie
@@ -25,10 +29,11 @@ public class MovieApiController : BaseApiController
     [HttpGet("get-all-movies")]
     public async Task<ActionResult<IEnumerable<MovieItem>>> GetMovieItems()
     {
-        return Ok(await Mediator.Send(new GetMoviesQuery.Query()));
+        return Ok(await Mediator.Send(new GetAllMoviesQuery.Query()));
+        // return Ok(await _context.Movies.ToListAsync());
     }
     //search for movie  
-    [HttpGet]
+    [HttpGet("search-movie/{search}")]
     public async Task<ActionResult<List<MovieItem>>> SearchMovies(string search)
     {
         var movieItem = await _movieContext.Movies.Where(t =>
@@ -40,13 +45,13 @@ public class MovieApiController : BaseApiController
         return movieItem;
     }
     //get movie by id
-    [HttpGet("{id}/edit")]
+    [HttpGet("edit/{id}")]
     public async Task<ActionResult<MovieItem>> GetMovieItem(int id)
     {
         return Ok(await Mediator.Send(new GetMovieByIdQuery.Query { Id = id }));
     }
     // update the movie
-    [HttpPut("{id}/update")]
+    [HttpPut("update/{id}")]
     public async Task<ActionResult<MovieItem>> EditMovie(int Id, MovieItem movies)
     {
         var movieItem = await _movieContext.Movies.FindAsync(Id);
@@ -64,17 +69,10 @@ public class MovieApiController : BaseApiController
         return Ok("Saved edited movie");
     }
     //delete movie
-    [HttpDelete("delete")]
-    public async Task<ActionResult<MovieItem>> DeleteMovie(int Id)
+    [HttpDelete("delete-movie/{id}")]
+    public async Task<ActionResult> DeleteMovie(int id)
     {
-        var movieItem = await _movieContext.Movies.FindAsync(Id);
-        if (movieItem == null)
-        {
-            return NotFound("Movie  with this Id does not exist");
-        }
-        _movieContext.Movies.Remove(movieItem);
-        await _movieContext.SaveChangesAsync();
-        return Ok("Movie successfully deleted");
+        return Ok(await Mediator.Send(new DeleteMovieCommand.Command { Id = id }));
 
     }
 }
