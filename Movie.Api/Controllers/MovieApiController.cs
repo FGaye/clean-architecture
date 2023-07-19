@@ -22,9 +22,9 @@ public class MovieApiController : BaseApiController
     }
  
     [HttpPost("create-movie")]
-    public async Task<ActionResult> CreateMovie(MovieItem movie)
+    public async Task<ActionResult> CreateMovie(MovieItemDto movie)
     {
-        return Ok(await Mediator.Send(new CreateMovieCommand.Command { MovieItem = movie }));
+        return Ok(await Mediator.Send(new CreateMovieCommand.Command { movieItemDto = movie }));
     }
  
     [HttpGet("get-all-movies")]
