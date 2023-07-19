@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Movie.Api.Controllers;
 using Movie.Application.Common.Interface;
 using Movie.Application.Movies.Commands.CreateMovie;
 using Movie.Application.Movies.Commands.DeleteMovie;
+using Movie.Application.Movies.Commands.EditMovie;
+using Movie.Application.Movies.Queries;
 using Movie.Application.Movies.Queries.GetMovieById;
 using Movie.Application.Movies.Queries.GetMovies;
 using Movie.Domain.Entities;
@@ -19,56 +20,39 @@ public class MovieApiController : BaseApiController
         _context = context;
         _movieContext = movieContext;
     }
-    // create movie
+ 
     [HttpPost("create-movie")]
-    public async Task<ActionResult> CreateMovie(MovieItem movie)
+    public async Task<ActionResult> CreateMovie(MovieItemDto movie)
     {
-        return Ok(await Mediator.Send(new CreateMovieCommand.Command { MovieItem = movie }));
+        return Ok(await Mediator.Send(new CreateMovieCommand.Command { movieItemDto = movie }));
     }
-    //get all the movies
+ 
     [HttpGet("get-all-movies")]
     public async Task<ActionResult<IEnumerable<MovieItem>>> GetMovieItems()
     {
         return Ok(await Mediator.Send(new GetAllMoviesQuery.Query()));
-        // return Ok(await _context.Movies.ToListAsync());
+      
     }
-    //search for movie  
+   
     [HttpGet("search-movie/{search}")]
     public async Task<ActionResult<List<MovieItem>>> SearchMovies(string search)
     {
-        var movieItem = await _movieContext.Movies.Where(t =>
-        t.Title.ToLower()
-        .Contains(search.ToLower()) || t.Description.ToLower()
-        .Contains(search.ToLower()) || t.Genre.ToLower()
-        .Contains(search.ToLower()))
-        .ToListAsync();
-        return movieItem;
+      return Ok(await Mediator.Send(new SearchMoviesQuery.Query{Title = search}));
     }
-    //get movie by id
+ 
     [HttpGet("edit/{id}")]
     public async Task<ActionResult<MovieItem>> GetMovieItem(int id)
     {
         return Ok(await Mediator.Send(new GetMovieByIdQuery.Query { Id = id }));
     }
-    // update the movie
+ 
     [HttpPut("update/{id}")]
-    public async Task<ActionResult<MovieItem>> EditMovie(int Id, MovieItem movies)
+    public async Task<ActionResult<MovieItem>> EditMovie( MovieItem movies)
     {
-        var movieItem = await _movieContext.Movies.FindAsync(Id);
-
-        if (movieItem == null)
-        {
-            return NotFound("Movie does not exist");
-        }
-        movieItem.Title = movies.Title;
-        movieItem.Description = movies.Description;
-        movieItem.Price = movies.Price;
-        movieItem.Genre = movies.Genre;
-
-        await _movieContext.SaveChangesAsync();
-        return Ok("Saved edited movie");
+      
+        return Ok(await Mediator.Send(new  EditMovie.Command{MovieItem = movies} ));
     }
-    //delete movie
+   
     [HttpDelete("delete-movie/{id}")]
     public async Task<ActionResult> DeleteMovie(int id)
     {
