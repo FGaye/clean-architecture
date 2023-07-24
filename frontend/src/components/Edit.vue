@@ -22,7 +22,7 @@ methods:
  {
   getMovieData(movieId)
   {
-    axios.get(`http://localhost:5123/MovieApi/${movieId}/edit`)
+    axios.get(`http://localhost:5123/MovieApi/edit/${movieId}`)
     .then(
        response => {
         this.movie = response.data
@@ -32,7 +32,7 @@ methods:
   },
   updateMovie()
   {
-    axios.put(`http://localhost:5123/MovieApi/${this.movieId}/update`, this.movie)
+    axios.put(`http://localhost:5123/MovieApi/update/${this.movieId}`, this.movie)
     .then(
       response =>
       {

@@ -1,9 +1,13 @@
 
+using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Movie.Api.Authentication.Services;
 using Movie.Api.Controllers;
-using Movie.Api.Dtos;
+using Movie.Application.Common.Dtos;
+using Movie.Application.Dtos;
+using Movie.Application.Users.Command;
+using Movie.Application.Users.Query;
+using Movie.Domain.Entities;
 using Movie.Infrastructure.Persistence;
 
 namespace Movie.Api;
@@ -19,40 +23,18 @@ public class AuthenticationController : BaseApiController
 
     }
     [HttpPost("register")]
-    public async Task<ActionResult<RegisterDto>> Register(RegisterDto registerDto)
+    public async Task<ActionResult> Register(RegisterDto createUser)
     {
         // check if username does not exist
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == registerDto.Email);
-        if (user != null)
-        {
-            return BadRequest("User already exist");
-        }
-
-        var users = CreateUser.addUser(registerDto);
-
-        _dbContext.Add(users);
-
-        await _dbContext.SaveChangesAsync();
-
-        return Ok();
+       
+        return Ok(await Mediator.Send(new Register.Command{registerDto = createUser}));
     }
 
 
     [HttpPost("login")]
-    public async Task<ActionResult<LoginDto>> Login(LoginDto loginDto)
+    public async Task<ActionResult<LoginDto>> Login(User user)
     {
-
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Name == loginDto.Username);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-        var loginResponseDto = new LoginResponseDto()
-        {
-            Message = "Login successful"
-        };
-        return Ok(loginResponseDto);
+        return Ok(await Mediator.Send(new Login.LoginQuery{Username = user.Name, Password = user.Password }));
     }
 
 

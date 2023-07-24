@@ -1,4 +1,4 @@
-namespace Movie.Api.Dtos
+namespace Movie.Application.Dtos
 {
     public class LoginResponseDto
     {

@@ -13,7 +13,7 @@ export default {
   methods: {
     fetchMovies() {
       axios
-        .get("http://localhost:5123/MovieApi/get")
+        .get("http://localhost:5123/MovieApi/get-all-movies")
         .then((response) => {
           this.movies = response.data;
         })
@@ -25,7 +25,7 @@ export default {
       if (!this.query) {
           return this.movies;
       }
-      await axios.get( `http://localhost:5123/MovieApi?search=${this.query}`)
+      await axios.get( `http://localhost:5123/MovieApi/search?search=${this.query}`)
       .then( response => {
           this.movies = response.data;
       })
@@ -40,7 +40,7 @@ export default {
     {
       if(confirm("Are you sure you want to delete this movie"))
       {
-       axios.delete(`http://localhost:5123/MovieApi/delete?Id=${movieId}`).then(response => 
+       axios.delete(`http://localhost:5123/MovieApi/delete-movie/${movieId}`).then(response => 
         {
           this.movies = this.movies.filter(movie => movie.id !== movieId);
         }).catch(error => {
@@ -63,12 +63,13 @@ export default {
     <input type="search" placeholder="search movie" class="input input-bordered w-full max-w-xs" v-model="query" v-on:input="searchMoviesForInputChange"/>
     <button type="submit" class=" btn btn-primary" >Search</button>
     </div>
-  </form>
-    <div class="">
+    <div class="flex justify-end  py-2 px-24">
     <router-link to="Create">
-      <button class="btn w-24 tooltip btn-success " data-tip="create a new movie ">Create</button>
+      <button class="btn w-24  btn-success " >Create</button>
     </router-link>
     </div>
+  </form>
+   
     <div class="flex justify-center py-12 px-12 mx-12">
     <table class="table-md">
       <tr class="hover">
@@ -85,9 +86,9 @@ export default {
         <td>{{ movie.genre }}</td>
         <td>
         <router-link :to="{path:`/${movie.id}/edit`}">
-        <button class="btn w-24 tooltip btn-success" data-tip="edit movie ">Edit</button>
+        <button class="btn w-20 tooltip btn-success" data-tip="edit movie ">Edit</button>
         </router-link>
-        <button class="btn w-24 rounded-full btn-success" @click="deleteMovie(movie.id)">Delete</button>     
+        <button class="btn w-20 btn-success" @click="deleteMovie(movie.id)">Delete</button>     
         </td>
       </tr>
     </table>

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Movie.Application;
 using Movie.Application.Common.Interface;
 using Movie.Application.Movies.Common;
+using Movie.Application.Users.Common;
 using Movie.Infrastructure.Persistence;
 
 
@@ -12,7 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.AddAutoMapper(typeof(MovieProfile).Assembly);
+    builder.Services.AddAutoMapper(typeof(MovieProfile).Assembly,typeof(UserProfile).Assembly);
+
     builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblies(typeof(ApplicationServiceEntryPoint).Assembly));
 
 

@@ -12,7 +12,9 @@ public class MovieContext : DbContext, IApplicationDbContext
 
     public DbSet<MovieItem> Movies => Set<MovieItem>();
 
-    public DbSet<Users> Users => Set<Users>();
+    public DbSet<User> Users => Set<User>();
+
+  
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

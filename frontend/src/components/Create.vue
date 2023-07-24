@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     fetchItem(movieId) {
-      axios.get("http://localhost:5123/MovieApi/get")
+      axios.get("http://localhost:5123/MovieApi/get-all-movies")
         .then(response => {
           this.movies = response.data;
           
@@ -30,7 +30,7 @@ export default {
         });
     },
     async createMovie(){
-       let result = await axios.post("http://localhost:5123/MovieApi/post", this.movie)
+       let result = await axios.post("http://localhost:5123/MovieApi/create-movie", this.movie)
         .then((response) => {
           this.movies = response.data;
           this.$router.push({name: 'movies'})

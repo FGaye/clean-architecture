@@ -1,9 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
-using Movie.Api.Dtos;
+using Movie.Application.Common.Dtos;
 
-
-  // hash password before saving to db
+namespace Movie.Application.Users.Command;
+// hash password before saving to db
 public class PasswordHasher
 {
     public static string HashPassword(RegisterDto registerDto)

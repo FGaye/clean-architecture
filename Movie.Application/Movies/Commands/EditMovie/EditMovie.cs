@@ -1,6 +1,8 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Movie.Application.Common.Interface;
+using Movie.Application.Movies.Commands.CreateMovie;
 using Movie.Domain.Entities;
 
 namespace Movie.Application.Movies.Commands.EditMovie
@@ -9,7 +11,8 @@ namespace Movie.Application.Movies.Commands.EditMovie
     {
         public class Command : IRequest<Unit>
         {
-          public MovieItem MovieItem { get; set; }
+          public int Id { get; set; }
+          public MovieItemDto Movie { get; set; }
         }
 
 
@@ -26,21 +29,17 @@ namespace Movie.Application.Movies.Commands.EditMovie
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
         
-            var movieItem = await _context.Movies.FindAsync(request.MovieItem.Id);
+              var movieItem = await _context.Movies.FindAsync(request.Id);
 
             if (movieItem == null)
             {
                 throw new Exception("Could not find movie");
             }
       
-            var movie = new MovieItem{
-                Title = request.MovieItem.Title,
-                Description = request.MovieItem.Description,
-                Price = request.MovieItem.Price,
-                Genre = request.MovieItem.Genre
-            };
-            _context.Movies.Update(movie);
-           await  _context.SaveChangesAsync(cancellationToken);
+            _mapper.Map(request.Movie, movieItem);
+            _context.Movies.Update(movieItem);
+            var updatedMovieDto = _mapper.Map<MovieItemDto>(movieItem);
+            await  _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
             }

@@ -1,13 +1,13 @@
-using Movie.Api.Dtos;
+using Movie.Application.Common.Dtos;
 using Movie.Domain.Entities;
 
-namespace Movie.Api.Authentication.Services
+namespace Movie.Application.Users.Command
 {
     public class CreateUser
     {
-        public static Users addUser(RegisterDto registerDto) =>
+        public static User addUser(RegisterDto registerDto) =>
         
-            new Users
+            new User
 
             {
 

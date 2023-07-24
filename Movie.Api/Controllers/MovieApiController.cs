@@ -34,8 +34,8 @@ public class MovieApiController : BaseApiController
       
     }
    
-    [HttpGet("search-movie/{search}")]
-    public async Task<ActionResult<List<MovieItem>>> SearchMovies(string search)
+    [HttpGet("search")]
+    public async Task<ActionResult<IEnumerable<MovieItem>>> SearchMovies(string search)
     {
       return Ok(await Mediator.Send(new SearchMoviesQuery.Query{Title = search}));
     }
@@ -47,10 +47,10 @@ public class MovieApiController : BaseApiController
     }
  
     [HttpPut("update/{id}")]
-    public async Task<ActionResult<MovieItem>> EditMovie( MovieItem movies)
+    public async Task<ActionResult<MovieItem>> EditMovie( MovieItemDto movies, int id)
     {
       
-        return Ok(await Mediator.Send(new  EditMovie.Command{MovieItem = movies} ));
+        return Ok(await Mediator.Send(new  EditMovie.Command{ Id = id, Movie = movies} ));
     }
    
     [HttpDelete("delete-movie/{id}")]
