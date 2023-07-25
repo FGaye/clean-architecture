@@ -1,11 +1,16 @@
+using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Movie.Application;
 using Movie.Application.Common.Interface;
+using Movie.Application.Movies.Commands.CreateMovie;
 using Movie.Application.Movies.Common;
+using Movie.Application.Users.Authentication;
 using Movie.Application.Users.Common;
+using Movie.Domain.Entities;
 using Movie.Infrastructure.Persistence;
-
+using static Movie.Application.Movies.Commands.CreateMovie.CreateMovieCommand;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +29,10 @@ var builder = WebApplication.CreateBuilder(args);
 
     // add scoped
     builder.Services.AddScoped<IApplicationDbContext, MovieContext>();
+
+    // services.AddScoped<IValidator<Person>, PersonValidator>();
+    builder.Services.AddScoped<IValidator<MovieItemDto>, CreateMovieCommandValidator>();
+    builder.Services.AddScoped<IValidator<User>, UserValidator>();
 
     builder.Services.AddCors(options =>
     {

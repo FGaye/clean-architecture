@@ -14,6 +14,7 @@ namespace Movie.Application.Movies.Commands.DeleteMovie
         public class CommandHandler : IRequestHandler<Command, Unit>
         {
             private readonly IApplicationDbContext _context;
+            
 
             public CommandHandler(IApplicationDbContext context)
             {

@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Movie.Application.Common.Interface;
-using Movie.Application.Dtos;
 using Movie.Domain.Entities;
 
 namespace Movie.Application.Users.Query

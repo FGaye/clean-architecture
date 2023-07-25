@@ -23,11 +23,10 @@ public class AuthenticationController : BaseApiController
 
     }
     [HttpPost("register")]
-    public async Task<ActionResult> Register(RegisterDto createUser)
+    public async Task<ActionResult> Register(User createUser)
     {
         // check if username does not exist
-       
-        return Ok(await Mediator.Send(new Register.Command{registerDto = createUser}));
+       return Ok(await Mediator.Send(new CreateUser.Command { user = createUser }));
     }
 
 
