@@ -14,7 +14,6 @@ namespace Movie.Application.Movies.Queries
            public string Title { get; set; }
         }
 
-
         public class Handler : IRequestHandler<Query, MovieItem>
         {
           private readonly IApplicationDbContext _context;
@@ -26,7 +25,7 @@ namespace Movie.Application.Movies.Queries
 
             public async Task<MovieItem> Handle(Query request, CancellationToken cancellationToken)
             {
-                var movieItem = await _context.Movies.FirstOrDefaultAsync(x => x.Title.ToLower().Contains(request.Title.ToLower()));
+             var movieItem = await _context.Movies.FirstOrDefaultAsync(x => x.Title.ToLower().Contains(request.Title.ToLower()));
              return movieItem;
             }
         }

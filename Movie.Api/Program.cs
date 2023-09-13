@@ -5,7 +5,6 @@ using Movie.Application.Common.Interface;
 using Movie.Application.Movies.Common;
 using Movie.Infrastructure.Persistence;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 {
@@ -15,12 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddAutoMapper(typeof(MovieProfile).Assembly);
     builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblies(typeof(ApplicationServiceEntryPoint).Assembly));
 
-
     var configuration = builder.Configuration;
-    builder.Services.AddDbContext<MovieContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("MovieApiDBConnection")));
 
-    // add scoped
+    builder.Services.AddDbContext<MovieContext>(options =>
+    {
+        options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
+    });
+
     builder.Services.AddScoped<IApplicationDbContext, MovieContext>();
 
     builder.Services.AddCors(options =>
