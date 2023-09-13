@@ -22,11 +22,7 @@ namespace Movie.Application.Movies.Commands.DeleteMovie
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var movie = await _context.Movies.FindAsync(request.Id);
-
-                if (movie == null)
-                    throw new Exception("Could not find movie");
-
+                var movie = await _context.Movies.FindAsync(request.Id) ?? throw new Exception("Could not find movie");
                 _context.Movies.Remove(movie);
 
                 var result = await _context.SaveChangesAsync(cancellationToken) > 0;
